@@ -197,20 +197,34 @@ async def get_points(user: User = Depends(require_user)):
     return {"user_id": user.id, "email": user.email, "points": user.points}
 
 
+from fastapi import Query
+
 @router.get("/store/items")
-async def list_store_items(user: User = Depends(require_user), db: Session = Depends(get_db)):
-    # Get owned card IDs
+async def list_store_items(
+    user: User = Depends(require_user),
+    db: Session = Depends(get_db),
+    limit: int = Query(10, ge=1, le=100),
+    offset: int = Query(0, ge=0)
+):
     owned = db.query(OwnedCard).filter(OwnedCard.user_id == user.id).all()
     owned_card_ids = [card.card_id for card in owned]
-    
-    # Add ownership status to items
+
+    sliced_items = STORE_ITEMS[offset: offset + limit]
+
     items_with_ownership = []
-    for item in STORE_ITEMS:
+    for item in sliced_items:
         item_copy = item.copy()
         item_copy["owned"] = item["id"] in owned_card_ids
         items_with_ownership.append(item_copy)
-    
-    return {"items": items_with_ownership, "points": user.points}
+
+    return {
+        "total": len(STORE_ITEMS),
+        "limit": limit,
+        "offset": offset,
+        "items": items_with_ownership,
+        "points": user.points
+    }
+
 
 
 @router.post("/store/purchase")
