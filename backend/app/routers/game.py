@@ -401,3 +401,30 @@ async def mint_card(card_id: int, user: User = Depends(require_user), db: Sessio
         "tokenId": token_id,
         "tokenURI": token_uri,
     }
+@router.get("/user/stats")
+def get_user_stats(
+    authorization: str = Header(...),
+    db: Session = Depends(get_db)
+):
+    payload = verify_jwt(authorization)
+    user_id = payload.get("user_id")
+
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+    problems_solved = (
+        db.query(SolvedProblem)
+        .filter(SolvedProblem.user_id == user_id)
+        .count()
+    )
+
+    cards_owned = (
+        db.query(OwnedCard)
+        .filter(OwnedCard.user_id == user_id)
+        .count()
+    )
+
+    return {
+        "problems_solved": problems_solved,
+        "cards_owned": cards_owned
+    }
