@@ -17,56 +17,56 @@ router = APIRouter(prefix="/game", tags=["game"])
 
 # Problem bank
 PROBLEMS = [
-    {"id": 1, "question": "What is 15 + 27?", "answer": "42", "points": 5, "category": "Math"},
-    {"id": 2, "question": "What is the capital of France?", "answer": "paris", "points": 3, "category": "Geography"},
-    {"id": 3, "question": "What is 8 * 7?", "answer": "56", "points": 5, "category": "Math"},
-    {"id": 4, "question": "How many sides does a hexagon have?", "answer": "6", "points": 4, "category": "Math"},
-    {"id": 5, "question": "What is the largest planet in our solar system?", "answer": "jupiter", "points": 4, "category": "Science"},
-    {"id": 6, "question": "What is 100 - 37?", "answer": "63", "points": 5, "category": "Math"},
-    {"id": 7, "question": "What programming language is this backend written in?", "answer": "python", "points": 2, "category": "Tech"},
-    {"id": 8, "question": "What is 12 * 12?", "answer": "144", "points": 5, "category": "Math"},
-    {"id": 9, "question": "What is the chemical symbol for water?", "answer": "h2o", "points": 3, "category": "Science"},
-    {"id": 10, "question": "What is the square root of 64?", "answer": "8", "points": 4, "category": "Math"},
-    {"id": 11, "question": "Who wrote Romeo and Juliet?", "answer": "shakespeare", "points": 3, "category": "Literature"},
-    {"id": 12, "question": "What is the capital of Japan?", "answer": "tokyo", "points": 3, "category": "Geography"},
-    {"id": 13, "question": "What is 25 * 4?", "answer": "100", "points": 4, "category": "Math"},
-    {"id": 14, "question": "How many continents are there?", "answer": "7", "points": 3, "category": "Geography"},
-    {"id": 15, "question": "What is the chemical symbol for gold?", "answer": "au", "points": 3, "category": "Science"},
-    {"id": 16, "question": "What year did World War II end?", "answer": "1945", "points": 4, "category": "History"},
-    {"id": 17, "question": "What is 99 / 9?", "answer": "11", "points": 4, "category": "Math"},
-    {"id": 18, "question": "What is the smallest prime number?", "answer": "2", "points": 3, "category": "Math"},
-    {"id": 19, "question": "What is the speed of light in vacuum (m/s)?", "answer": "300000000", "points": 5, "category": "Physics"},
-    {"id": 20, "question": "How many bones are in the human body?", "answer": "206", "points": 4, "category": "Biology"},
-    {"id": 21, "question": "What is the capital of Germany?", "answer": "berlin", "points": 3, "category": "Geography"},
-    {"id": 22, "question": "What is 17 + 18?", "answer": "35", "points": 3, "category": "Math"},
-    {"id": 23, "question": "What element has atomic number 1?", "answer": "hydrogen", "points": 4, "category": "Chemistry"},
-    {"id": 24, "question": "How many sides does a pentagon have?", "answer": "5", "points": 2, "category": "Math"},
-    {"id": 25, "question": "What is the largest ocean on Earth?", "answer": "pacific", "points": 3, "category": "Geography"},
-    {"id": 26, "question": "What is 144 / 12?", "answer": "12", "points": 4, "category": "Math"},
-    {"id": 27, "question": "Who invented the telephone?", "answer": "alexander graham bell", "points": 4, "category": "History"},
-    {"id": 28, "question": "What is the boiling point of water in Celsius?", "answer": "100", "points": 3, "category": "Physics"},
-    {"id": 29, "question": "How many strings does a guitar have?", "answer": "6", "points": 2, "category": "Music"},
-    {"id": 30, "question": "What is the capital of Italy?", "answer": "rome", "points": 3, "category": "Geography"},
-    {"id": 31, "question": "What does CPU stand for?", "answer": "central processing unit", "points": 4, "category": "Tech"},
-    {"id": 32, "question": "What is 2^5?", "answer": "32", "points": 3, "category": "Math"},
-    {"id": 33, "question": "Who painted the Mona Lisa?", "answer": "leonardo da vinci", "points": 3, "category": "Art"},
-    {"id": 34, "question": "What planet is known as the Red Planet?", "answer": "mars", "points": 3, "category": "Science"},
-    {"id": 35, "question": "What language runs in a web browser?", "answer": "javascript", "points": 4, "category": "Tech"},
-    {"id": 36, "question": "What is 7! (factorial)?", "answer": "5040", "points": 5, "category": "Math"},
-    {"id": 37, "question": "What gas do plants absorb?", "answer": "carbon dioxide", "points": 3, "category": "Biology"},
-    {"id": 38, "question": "What is the hardest natural substance?", "answer": "diamond", "points": 3, "category": "Science"},
-    {"id": 39, "question": "Who discovered penicillin?", "answer": "alexander fleming", "points": 4, "category": "History"},
-    {"id": 40, "question": "What is 3/4 as a decimal?", "answer": "0.75", "points": 3, "category": "Math"},
-    {"id": 41, "question": "What protocol secures HTTP?", "answer": "tls", "points": 4, "category": "Tech"},
-    {"id": 42, "question": "What is the capital of Canada?", "answer": "ottawa", "points": 3, "category": "Geography"},
-    {"id": 43, "question": "What is the tallest mountain on Earth?", "answer": "mount everest", "points": 3, "category": "Geography"},
-    {"id": 44, "question": "How many bits are in a byte?", "answer": "8", "points": 2, "category": "Tech"},
-    {"id": 45, "question": "What is the freezing point of water in Celsius?", "answer": "0", "points": 2, "category": "Physics"},
-    {"id": 46, "question": "What organ pumps blood through the body?", "answer": "heart", "points": 2, "category": "Biology"},
-    {"id": 47, "question": "Solve for x: 2x + 6 = 14", "answer": "4", "points": 3, "category": "Math"},
-    {"id": 48, "question": "What is the binary representation of 5?", "answer": "101", "points": 3, "category": "Tech"},
-    {"id": 49, "question": "Who is known as the father of computers?", "answer": "charles babbage", "points": 4, "category": "History"},
-    {"id": 50, "question": "What does DNA stand for?", "answer": "deoxyribonucleic acid", "points": 5, "category": "Biology"},
+    {"id": 1, "question": "What is 15 + 27?", "answer": "42", "points": 5, "category": "Math", "difficulty": "Hard"},
+    {"id": 2, "question": "What is the capital of France?", "answer": "paris", "points": 3, "category": "Geography", "difficulty": "Easy"},
+    {"id": 3, "question": "What is 8 * 7?", "answer": "56", "points": 5, "category": "Math", "difficulty": "Hard"},
+    {"id": 4, "question": "How many sides does a hexagon have?", "answer": "6", "points": 4, "category": "Math", "difficulty": "Medium"},
+    {"id": 5, "question": "What is the largest planet in our solar system?", "answer": "jupiter", "points": 4, "category": "Science", "difficulty": "Medium"},
+    {"id": 6, "question": "What is 100 - 37?", "answer": "63", "points": 5, "category": "Math", "difficulty": "Hard"},
+    {"id": 7, "question": "What programming language is this backend written in?", "answer": "python", "points": 2, "category": "Tech", "difficulty": "Easy"},
+    {"id": 8, "question": "What is 12 * 12?", "answer": "144", "points": 5, "category": "Math", "difficulty": "Hard"},
+    {"id": 9, "question": "What is the chemical symbol for water?", "answer": "h2o", "points": 3, "category": "Science", "difficulty": "Easy"},
+    {"id": 10, "question": "What is the square root of 64?", "answer": "8", "points": 4, "category": "Math", "difficulty": "Medium"},
+    {"id": 11, "question": "Who wrote Romeo and Juliet?", "answer": "shakespeare", "points": 3, "category": "Literature", "difficulty": "Easy"},
+    {"id": 12, "question": "What is the capital of Japan?", "answer": "tokyo", "points": 3, "category": "Geography", "difficulty": "Easy"},
+    {"id": 13, "question": "What is 25 * 4?", "answer": "100", "points": 4, "category": "Math", "difficulty": "Medium"},
+    {"id": 14, "question": "How many continents are there?", "answer": "7", "points": 3, "category": "Geography", "difficulty": "Easy"},
+    {"id": 15, "question": "What is the chemical symbol for gold?", "answer": "au", "points": 3, "category": "Science", "difficulty": "Easy"},
+    {"id": 16, "question": "What year did World War II end?", "answer": "1945", "points": 4, "category": "History", "difficulty": "Medium"},
+    {"id": 17, "question": "What is 99 / 9?", "answer": "11", "points": 4, "category": "Math", "difficulty": "Medium"},
+    {"id": 18, "question": "What is the smallest prime number?", "answer": "2", "points": 3, "category": "Math", "difficulty": "Easy"},
+    {"id": 19, "question": "What is the speed of light in vacuum (m/s)?", "answer": "300000000", "points": 5, "category": "Physics", "difficulty": "Hard"},
+    {"id": 20, "question": "How many bones are in the human body?", "answer": "206", "points": 4, "category": "Biology", "difficulty": "Medium"},
+    {"id": 21, "question": "What is the capital of Germany?", "answer": "berlin", "points": 3, "category": "Geography", "difficulty": "Easy"},
+    {"id": 22, "question": "What is 17 + 18?", "answer": "35", "points": 3, "category": "Math", "difficulty": "Easy"},
+    {"id": 23, "question": "What element has atomic number 1?", "answer": "hydrogen", "points": 4, "category": "Chemistry", "difficulty": "Medium"},
+    {"id": 24, "question": "How many sides does a pentagon have?", "answer": "5", "points": 2, "category": "Math", "difficulty": "Easy"},
+    {"id": 25, "question": "What is the largest ocean on Earth?", "answer": "pacific", "points": 3, "category": "Geography", "difficulty": "Easy"},
+    {"id": 26, "question": "What is 144 / 12?", "answer": "12", "points": 4, "category": "Math", "difficulty": "Medium"},
+    {"id": 27, "question": "Who invented the telephone?", "answer": "alexander graham bell", "points": 4, "category": "History", "difficulty": "Medium"},
+    {"id": 28, "question": "What is the boiling point of water in Celsius?", "answer": "100", "points": 3, "category": "Physics", "difficulty": "Easy"},
+    {"id": 29, "question": "How many strings does a guitar have?", "answer": "6", "points": 2, "category": "Music", "difficulty": "Easy"},
+    {"id": 30, "question": "What is the capital of Italy?", "answer": "rome", "points": 3, "category": "Geography", "difficulty": "Easy"},
+    {"id": 31, "question": "What does CPU stand for?", "answer": "central processing unit", "points": 4, "category": "Tech", "difficulty": "Medium"},
+    {"id": 32, "question": "What is 2^5?", "answer": "32", "points": 3, "category": "Math", "difficulty": "Easy"},
+    {"id": 33, "question": "Who painted the Mona Lisa?", "answer": "leonardo da vinci", "points": 3, "category": "Art", "difficulty": "Easy"},
+    {"id": 34, "question": "What planet is known as the Red Planet?", "answer": "mars", "points": 3, "category": "Science", "difficulty": "Easy"},
+    {"id": 35, "question": "What language runs in a web browser?", "answer": "javascript", "points": 4, "category": "Tech", "difficulty": "Medium"},
+    {"id": 36, "question": "What is 7! (factorial)?", "answer": "5040", "points": 5, "category": "Math", "difficulty": "Hard"},
+    {"id": 37, "question": "What gas do plants absorb?", "answer": "carbon dioxide", "points": 3, "category": "Biology", "difficulty": "Easy"},
+    {"id": 38, "question": "What is the hardest natural substance?", "answer": "diamond", "points": 3, "category": "Science", "difficulty": "Easy"},
+    {"id": 39, "question": "Who discovered penicillin?", "answer": "alexander fleming", "points": 4, "category": "History", "difficulty": "Medium"},
+    {"id": 40, "question": "What is 3/4 as a decimal?", "answer": "0.75", "points": 3, "category": "Math", "difficulty": "Easy"},
+    {"id": 41, "question": "What protocol secures HTTP?", "answer": "tls", "points": 4, "category": "Tech", "difficulty": "Medium"},
+    {"id": 42, "question": "What is the capital of Canada?", "answer": "ottawa", "points": 3, "category": "Geography", "difficulty": "Easy"},
+    {"id": 43, "question": "What is the tallest mountain on Earth?", "answer": "mount everest", "points": 3, "category": "Geography", "difficulty": "Easy"},
+    {"id": 44, "question": "How many bits are in a byte?", "answer": "8", "points": 2, "category": "Tech", "difficulty": "Easy"},
+    {"id": 45, "question": "What is the freezing point of water in Celsius?", "answer": "0", "points": 2, "category": "Physics", "difficulty": "Easy"},
+    {"id": 46, "question": "What organ pumps blood through the body?", "answer": "heart", "points": 2, "category": "Biology", "difficulty": "Easy"},
+    {"id": 47, "question": "Solve for x: 2x + 6 = 14", "answer": "4", "points": 3, "category": "Math", "difficulty": "Easy"},
+    {"id": 48, "question": "What is the binary representation of 5?", "answer": "101", "points": 3, "category": "Tech", "difficulty": "Easy"},
+    {"id": 49, "question": "Who is known as the father of computers?", "answer": "charles babbage", "points": 4, "category": "History", "difficulty": "Medium"},
+    {"id": 50, "question": "What does DNA stand for?", "answer": "deoxyribonucleic acid", "points": 5, "category": "Biology", "difficulty": "Hard"},
 ]
 
 # Store catalog (MLSA-inspired collectibles)
@@ -271,30 +271,46 @@ async def get_owned_cards(user: User = Depends(require_user), db: Session = Depe
     }
 
 
+from typing import Optional
+from fastapi import Query
+
 @router.get("/problems")
-async def get_problems(user: User = Depends(require_user), db: Session = Depends(get_db)):
-    """Get a random unsolved problem for the user"""
+async def get_problems(
+    user: User = Depends(require_user),
+    db: Session = Depends(get_db),
+    difficulty: Optional[str] = Query(None)
+):
+    """Get unsolved problems for the user, optionally filtered by difficulty"""
     solved = db.query(SolvedProblem).filter(SolvedProblem.user_id == user.id).all()
     solved_ids = {sp.problem_id for sp in solved}
     
     # Get unsolved problems
     unsolved = [p for p in PROBLEMS if p["id"] not in solved_ids]
     
+    # Filter by difficulty if provided
+    if difficulty:
+        unsolved = [p for p in unsolved if p["difficulty"].lower() == difficulty.lower()]
+    
     if not unsolved:
         return {
-            "problem": None,
-            "message": "You've solved all problems! Great job!",
+            "problems": [],
+            "message": "No problems available for this filter!",
             "total_solved": len(solved_ids),
             "total_problems": len(PROBLEMS)
         }
     
-    # Return a random unsolved problem (without the answer)
-    problem = random.choice(unsolved)
+    # Return all unsolved problems (without answers)
     return {
-        "id": problem["id"],
-        "question": problem["question"],
-        "points": problem["points"],
-        "category": problem["category"],
+        "problems": [
+            {
+                "id": p["id"],
+                "question": p["question"],
+                "points": p["points"],
+                "category": p["category"],
+                "difficulty": p["difficulty"]
+            }
+            for p in unsolved
+        ],
         "total_solved": len(solved_ids),
         "total_problems": len(PROBLEMS)
     }

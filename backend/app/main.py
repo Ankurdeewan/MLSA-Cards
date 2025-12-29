@@ -1,4 +1,7 @@
 from fastapi import FastAPI
+from fastapi.openapi.utils import get_openapi
+from fastapi.security import HTTPBearer
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
@@ -32,3 +35,28 @@ app.mount("/", StaticFiles(directory="static", html=True), name="static")
 @app.get("/health")
 async def health():
     return {"status": "ok"}
+from fastapi.openapi.utils import get_openapi
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title="Game Collectible API",
+        version="0.1.0",
+        description="API for authentication and game endpoints",
+        routes=app.routes,
+    )
+    # Add security scheme
+    openapi_schema["components"]["securitySchemes"] = {
+        "BearerAuth": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT",
+        }
+    }
+    # Apply globally
+    openapi_schema["security"] = [{"BearerAuth": []}]
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+app.openapi = custom_openapi
