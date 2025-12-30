@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
+from fastapi.responses import RedirectResponse
 
 import time
 from sqlalchemy import text
@@ -10,7 +11,6 @@ from .config import get_settings
 from .routers import auth, game
 from .database import engine
 from .models import Base
-
 
 # Track when the service started (for uptime)
 START_TIME = time.time()
@@ -36,8 +36,10 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(game.router)
 
+# Mount static assets folder
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# -------- HEALTH ENDPOINT (must be BEFORE static mount) --------
+# -------- HEALTH ENDPOINT --------
 @app.get("/health")
 async def health():
     """
@@ -63,6 +65,10 @@ async def health():
         "version": "1.0.0",
     }
 
+# Redirect root to Swagger docs
+@app.get("/")
+async def root():
+    return RedirectResponse(url="/docs")
 
-# STATIC FILES (must be AFTER /health)
+# Serve static site at root (AFTER health + redirect logic if needed)
 app.mount("/", StaticFiles(directory="static", html=True), name="static")
