@@ -13,6 +13,19 @@ from ..models import User
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
+from fastapi.responses import JSONResponse
+
+def error_response(code: str, message: str, status_code: int = 400):
+    return JSONResponse(
+        status_code=status_code,
+        content={
+            "error": {
+                "code": code,
+                "message": message
+            }
+        }
+    )
+
 # OAuth configuration
 settings = get_settings()
 

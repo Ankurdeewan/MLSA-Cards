@@ -1,11 +1,14 @@
 from typing import Optional
 import random
 from datetime import datetime
+from enum import Enum
 
+from fastapi import Query
 from fastapi import APIRouter, Header, HTTPException, Depends
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
+from ..schemas import ProblemSchema
 from ..auth import verify_jwt
 from ..pinata import pin_json
 from ..chain import get_web3
@@ -274,72 +277,78 @@ async def get_owned_cards(user: User = Depends(require_user), db: Session = Depe
 from typing import Optional
 from fastapi import Query
 
+from enum import Enum
+
+class Difficulty(str, Enum):
+    easy = "easy"
+    medium = "medium"
+    hard = "hard"
+
+from app.auth import require_user
+
 @router.get("/problems")
-async def get_problems(
+def get_problem(
     user: User = Depends(require_user),
     db: Session = Depends(get_db),
-    difficulty: Optional[str] = Query(None)
+    difficulty: Difficulty | None = Query(None)
 ):
-    """Get unsolved problems for the user, optionally filtered by difficulty"""
+    """Return a single unsolved problem for the user, optionally filtered by difficulty"""
+    # Find solved problems for this user
     solved = db.query(SolvedProblem).filter(SolvedProblem.user_id == user.id).all()
     solved_ids = {sp.problem_id for sp in solved}
-    
+
     # Get unsolved problems
     unsolved = [p for p in PROBLEMS if p["id"] not in solved_ids]
-    
+
     # Filter by difficulty if provided
     if difficulty:
-        unsolved = [p for p in unsolved if p["difficulty"].lower() == difficulty.lower()]
-    
-    if not unsolved:
-        return {
-            "problems": [],
-            "message": "No problems available for this filter!",
-            "total_solved": len(solved_ids),
-            "total_problems": len(PROBLEMS)
-        }
-    
-    # Return all unsolved problems (without answers)
-    return {
-        "problems": [
-            {
-                "id": p["id"],
-                "question": p["question"],
-                "points": p["points"],
-                "category": p["category"],
-                "difficulty": p["difficulty"]
-            }
-            for p in unsolved
-        ],
-        "total_solved": len(solved_ids),
-        "total_problems": len(PROBLEMS)
-    }
+        unsolved = [p for p in unsolved if p["difficulty"].lower() == difficulty.value.lower()]
 
+    if not unsolved:
+        raise HTTPException(status_code=404, detail="No problems available for this filter")
+
+    # Pick one random unsolved problem
+    problem = random.choice(unsolved)
+
+    return {
+        "id": problem["id"],
+        "question": problem["question"],
+        "points": problem["points"],
+        "category": problem["category"],
+        "difficulty": problem["difficulty"]
+    }
 
 @router.post("/solve")
 async def solve_problem(req: SolveRequest, user: User = Depends(require_user), db: Session = Depends(get_db)):
     """Submit an answer to a problem"""
-    
+
+    # --- Input validation ---
+    cleaned = req.answer.strip()
+    if not (1 <= len(cleaned) <= 100):
+        raise HTTPException(status_code=400, detail="Answer must be between 1 and 100 characters")
+
+    # Basic sanitization: allow alphanumeric + spaces
+    sanitized = "".join(ch for ch in cleaned if ch.isalnum() or ch.isspace())
+
     # Check if already solved
     already_solved = db.query(SolvedProblem).filter(
         SolvedProblem.user_id == user.id,
         SolvedProblem.problem_id == req.problem_id
     ).first()
-    
+
     if already_solved:
         raise HTTPException(status_code=400, detail="Problem already solved")
+
     # Find the problem
     problem = next((p for p in PROBLEMS if p["id"] == req.problem_id), None)
     if not problem:
         raise HTTPException(status_code=404, detail="Problem not found")
-    
-    # Check answer (case-insensitive)
-    is_correct = req.answer.strip().lower() == problem["answer"].lower()
-    
+
+    # Compare sanitized answer (case-insensitive)
+    is_correct = sanitized.lower() == problem["answer"].lower()
+
     if is_correct:
-        # Award points and mark as solved
         user.points += problem["points"]
-        
         solved_problem = SolvedProblem(
             user_id=user.id,
             problem_id=req.problem_id,
@@ -347,7 +356,7 @@ async def solve_problem(req: SolveRequest, user: User = Depends(require_user), d
         )
         db.add(solved_problem)
         db.commit()
-        
+
         return {
             "correct": True,
             "points_earned": problem["points"],
@@ -361,8 +370,7 @@ async def solve_problem(req: SolveRequest, user: User = Depends(require_user), d
             "total_points": user.points,
             "message": "Incorrect answer. Try again or get a new problem!"
         }
-
-
+    
 @router.post("/mint/{card_id}")
 async def mint_card(card_id: int, user: User = Depends(require_user), db: Session = Depends(get_db)):
     """Mint an owned card as NFT on blockchain"""

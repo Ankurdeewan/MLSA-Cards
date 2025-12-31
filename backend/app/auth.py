@@ -10,6 +10,15 @@ from .config import get_settings
 
 NONCE_STORE: Dict[str, str] = {}
 
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
+security = HTTPBearer()
+
+def require_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
+    # For now, just accept any token and return a dummy user
+    return {"id": 1, "email": "test@example.com"}
 
 def generate_nonce(wallet: str) -> str:
     nonce = secrets.token_hex(16)
